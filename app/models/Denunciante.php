@@ -15,7 +15,7 @@ class Denunciante extends Model
         'name', 'email', 'photo', 'cpf', 'password', 'nickname'
     ];
 
-    protected $hidden = ['access_token','remember_token', 'active'];
+    protected $hidden = ['access_token','remember_token', 'active', 'password'];
 
     public function showAlso($fields)
 	{

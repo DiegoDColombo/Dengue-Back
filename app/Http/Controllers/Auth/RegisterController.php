@@ -6,6 +6,12 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+use App\models\Denunciante;
+use App\models\Address;
+use Response;
+use Hash;
+
 
 class RegisterController extends Controller
 {
@@ -45,13 +51,23 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
-        ]);
+    protected function validator($data)
+    {   
+        if(array_key_exists('email', $data)){
+            return Validator::make($data, [
+                'name'      => 'required|string|max:255',
+                'email'     => 'required|email|max:255|unique:denunciantes',
+                'password'  => 'required|min:6|regex:/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])([a-zA-Z0-9]{6,})$/',
+                'cpf'       => 'required|min:11|unique:denunciantes|regex:/^[0-9]+$/'
+                ]);
+        }
+        else{
+            return Validator::make($data, [
+                'street'    => 'required',
+                'number'    => 'required|numeric',
+                'cep'       => 'required|numeric' 
+                ]);
+        }
     }
 
     /**
@@ -60,12 +76,30 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return User
      */
-    protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+    public function createDenunciante(Request $request)
+    {   
+
+        if($this->validator($request->input('address_data'))->fails()){
+            return Response::json($this->validator($request->input('address_data'))->errors(), 404);
+        
+        }else if($this->validator($request->input('data'))->fails()){
+            return Response::json($this->validator($request->input('data'))->errors(), 404);
+        }
+        else{
+            
+            $address = new Address();
+            $address->fill($request->input('address_data'));
+            $address->save();
+
+            $denunciante = new Denunciante();
+            $denunciante->fill($request->input('data'));
+            $denunciante->password = Hash::make($denunciante->password);
+            $denunciante->address_id = $address->id;
+            $denunciante->active = true;
+            $denunciante->save();
+
+            return Response::json($denunciante, 200);
+        }
     }
+
 }
