@@ -15,8 +15,8 @@ class ExampleTest extends TestCase
     public function testBasicExample()
     {
         $den = new Denunciante();
-        $id = $den->searchDenunciante(6);
-        $this->assertEquals($id->id,5);
+        $id = $den->searchDenunciante(1);
+        $this->assertEquals($id->id,1);
     }
 
 }
