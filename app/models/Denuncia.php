@@ -12,7 +12,7 @@ class Denuncia extends Model
         'type', 'status', 'photo', 'epidem_vigilance', 'diagnosticated_cases'
     ];
 
-    protected $hidden = ['denunciante_id', 'location_id', 'created_at', 'updated_at'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function showAlso($fields)
 	{
