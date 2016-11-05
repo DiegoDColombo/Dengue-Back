@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\models\Denunciante;
 
 class ExampleTest extends TestCase
 {
@@ -13,7 +14,9 @@ class ExampleTest extends TestCase
      */
     public function testBasicExample()
     {
-        $this->visit('/')
-             ->see('Laravel');
+        $den = new Denunciante();
+        $id = $den->searchDenunciante(6);
+        $this->assertEquals($id->id,5);
     }
+
 }
