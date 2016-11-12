@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use App\models\Denunciante;
 use App\models\Address;
 use Response;
@@ -72,7 +73,7 @@ class RegisterController extends Controller
 
     /**
      * Create a new user instance after a valid registration.
-     *
+     * Check how will photo be updated and stored
      * @param  array  $data
      * @return User
      */
@@ -96,6 +97,12 @@ class RegisterController extends Controller
             $denunciante->password = Hash::make($denunciante->password);
             $denunciante->address_id = $address->id;
             $denunciante->active = true;
+            if($request->hasFile('photo')){
+                $file = new UploadedFile();
+                $file = $request->file('photo');
+                $path = $file->store('images');
+                $denunciante->photo = $path;
+            }
             $denunciante->save();
 
             return Response::json($denunciante, 200);
