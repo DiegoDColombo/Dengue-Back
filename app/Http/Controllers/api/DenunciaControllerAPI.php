@@ -68,6 +68,18 @@ class DenunciaControllerAPI extends Controller
         }
     }
 
+    public function updateDenunciaStatus(Request $request, $denuncia_id){
+
+        $denuncia = Denuncia::searchDenuncia($denuncia_id);
+        if($denuncia->status === "resolved"){
+            return Response::json('Not modified', 304);
+        }
+        $denuncia->status = "resolved";
+        $denuncia->save();
+        
+        return Response::json($denuncia, 200);
+
+    }
 
 
 
