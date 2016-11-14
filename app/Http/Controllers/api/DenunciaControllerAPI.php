@@ -55,8 +55,8 @@ class DenunciaControllerAPI extends Controller
             $denuncia = new Denuncia();
             $denuncia->fill($request->input('denuncia'));
             $denuncia->location_id = $location->id;
-            //$denuncia->denunciante_id = $request->user()->id;
-            $denuncia->denunciante_id = 1;
+            $denuncia->denunciante_id = $request->user()->id;
+            
             if($request->hasFile('photo')){
                 $file = new UploadedFile();
                 $file = $request->file('photo');
