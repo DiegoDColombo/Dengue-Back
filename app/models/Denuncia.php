@@ -22,7 +22,7 @@ class Denuncia extends Model
 	}
 
 	public function searchDenuncia($id){
-		$denuncia = Denuncia::find($id);
+		$denuncia = Denuncia::where('denuncia_id', $id)->first();
 		return $denuncia;
 	}
 }

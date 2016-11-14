@@ -30,7 +30,7 @@ class Denunciante extends Model
 	}
 
 	public function getDenuncias(){
-		return $this->hasMany('App/Denuncia');
+		return $this->hasMany('App/models/Denuncia');
 	}
 	
 }
