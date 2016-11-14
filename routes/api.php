@@ -17,5 +17,5 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
 
-Route::post('/createDenuncia', 'api\DenunciaControllerAPI@createDenuncia');
+Route::post('/createDenuncia', 'api\DenunciaControllerAPI@createDenuncia')->middleware('auth');
 Route::put('/resolveDenuncia/{denunciaId}', 'api\DenunciaControllerAPI@updateDenunciaStatus')->middleware('auth');
