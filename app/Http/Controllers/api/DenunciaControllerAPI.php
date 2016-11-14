@@ -11,6 +11,7 @@ use App\models\Denuncia;
 use App\models\Address;
 use App\models\location;
 use Response;
+use DB;
 
 
 class DenunciaControllerAPI extends Controller
@@ -70,12 +71,12 @@ class DenunciaControllerAPI extends Controller
 
     public function updateDenunciaStatus(Request $request, $denuncia_id){
 
-        $denuncia = Denuncia::searchDenuncia($denuncia_id);
+        $denuncia = new Denuncia();
+        $denuncia = $denuncia->searchDenuncia($denuncia_id);
         if($denuncia->status === "resolved"){
             return Response::json('Not modified', 304);
         }
-        $denuncia->status = "resolved";
-        $denuncia->save();
+        DB::table('denuncias')->where('denuncia_id', $denuncia_id)->update(['status' => "resolved"]);
         
         return Response::json($denuncia, 200);
 
