@@ -1,4 +1,4 @@
 <?php
 
 Route::post('/signUp', 'Auth\RegisterController@createDenunciante');
-Route::get('/teste', 'Auth\RegisterController@testeControllerConn');
+Route::post('/login', 'Auth\LoginController@login');
