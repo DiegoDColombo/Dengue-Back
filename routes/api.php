@@ -16,5 +16,6 @@ use Illuminate\Http\Request;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
+
 Route::post('/createDenuncia', 'api\DenunciaControllerAPI@createDenuncia');
-Route::put('/resolveDenuncia/{denunciaId}', 'api\DenunciaControllerAPI@updateDenunciaStatus');
+Route::put('/resolveDenuncia/{denunciaId}', 'api\DenunciaControllerAPI@updateDenunciaStatus')->middleware('auth');
