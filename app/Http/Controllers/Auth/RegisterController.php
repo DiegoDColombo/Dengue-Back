@@ -79,28 +79,39 @@ class RegisterController extends Controller
      */
     public function createDenunciante(Request $request)
     {   
+        $data = [
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'cpf' => $request->input('cpf'),
+            'password' => $request->input('password')
+        ];
 
-        if($this->validator($request->input('address_data'))->fails()){
-            return Response::json($this->validator($request->input('address_data'))->errors(), 404);
+        $address_data = [
+            'street' => $request->input('street'),
+            'number' => $request->input('number'),
+            'cep' => $request->input('cep'),
+            'complement' => $request->input('complement')
+        ];
+
+        if($this->validator($address_data)->fails()) {
+            return Response::json($this->validator($address_data)->errors(), 404);
         
-        }else if($this->validator($request->input('data'))->fails()){
-            return Response::json($this->validator($request->input('data'))->errors(), 404);
+        }else if($this->validator($data)->fails()) {
+            return Response::json($this->validator($data)->errors(), 404);
         }
         else{
             
             $address = new Address();
-            $address->fill($request->input('address_data'));
+            $address->fill($address_data);
             $address->save();
 
             $denunciante = new Denunciante();
-            $denunciante->fill($request->input('data'));
+            $denunciante->fill($request->only(['name','email','cpf','password']));
             $denunciante->password = Hash::make($denunciante->password);
             $denunciante->address_id = $address->id;
             $denunciante->active = true;
             if($request->hasFile('photo')){
-                $file = new UploadedFile();
-                $file = $request->file('photo');
-                $path = $file->store('images');
+                $path = $request->photo->store('images');
                 $denunciante->photo = $path;
             }
             $denunciante->save();
