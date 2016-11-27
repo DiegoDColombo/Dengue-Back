@@ -23,9 +23,8 @@ class DenunciaControllerAPI extends Controller
         if(array_key_exists('type', $data)){
             return Validator::make($data, [
                 'type'      			=> 'required',
-                'status'                => 'required',
-                'epidem_vigilance'      => 'boolean',
-                'diagnosticated_cases'	=> 'boolean'
+                'epidem_vigilance'      => 'required|boolean',
+                'diagnosticated_cases'	=> 'required|boolean'
                 ]);
         }
         else{
@@ -39,28 +38,46 @@ class DenunciaControllerAPI extends Controller
 
     public function createDenuncia(Request $request)
     {   
-    	//Implement photo
-        if($this->validator($request->input('location_data'))->fails()){
-            return Response::json($this->validator($request->input('location_data'))->errors(), 404);
+        if($request->input('epidem_vigilance') === "true"){
+
+        }
+
+
+    	$data = [
+            'type' => $request->input('type'),
+            'epidem_vigilance' => filter_var($request->input('epidem_vigilance'), FILTER_VALIDATE_BOOLEAN),
+            'diagnosticated_cases' => filter_var($request->input('diagnosticated_cases'), FILTER_VALIDATE_BOOLEAN)
+        ];
+
+        $location_data = [
+            'street' => $request->input('street'),
+            'number' => $request->input('number'),
+            'cep' => $request->input('cep'),
+            'complement' => $request->input('complement')
+        ];
+
+        if($this->validator($location_data)->fails()) {
+            return Response::json($this->validator($location_data)->errors(), 400);
         
-        }else if($this->validator($request->input('denuncia'))->fails()){
-            return Response::json($this->validator($request->input('denuncia'))->errors(), 404);
+        }else if($this->validator($data)->fails()){
+            return Response::json($this->validator($data)->errors(), 400);
         }
         else{
             
             $location = new Location();
-            $location->fill($request->input('location_data'));
+            $location->fill($location_data);
             $location->save();
 
             $denuncia = new Denuncia();
-            $denuncia->fill($request->input('denuncia'));
+            $denuncia->type = $request->input('type');
+            $denuncia->epidem_vigilance = $data['epidem_vigilance'];
+            $denuncia->diagnosticated_cases = $data['diagnosticated_cases'];
             $denuncia->location_id = $location->id;
             $denuncia->denunciante_id = $request->user()->id;
+            $denuncia->status = "open";
             
             if($request->hasFile('photo')){
-                $file = new UploadedFile();
-                $file = $request->file('photo');
-                $path = $file->store('images');
+                $path = $request->photo->store('images');
                 $denuncia->photo = $path;
             }
             $denuncia->save();

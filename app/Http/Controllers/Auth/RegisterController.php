@@ -94,10 +94,10 @@ class RegisterController extends Controller
         ];
 
         if($this->validator($address_data)->fails()) {
-            return Response::json($this->validator($address_data)->errors(), 404);
+            return Response::json($this->validator($address_data)->errors(), 400);
         
         }else if($this->validator($data)->fails()) {
-            return Response::json($this->validator($data)->errors(), 404);
+            return Response::json($this->validator($data)->errors(), 400);
         }
         else{
             
