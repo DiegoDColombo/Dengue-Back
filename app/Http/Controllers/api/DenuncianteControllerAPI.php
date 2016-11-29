@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\models\Denunciante;
 use App\models\Denuncia;
+use App\models\Location;
 use Response;
 
 class DenuncianteControllerAPI extends Controller
@@ -15,6 +16,12 @@ class DenuncianteControllerAPI extends Controller
 
 		$denunciante = Denunciante::find($request->user()->id);
 		$denuncias = $denunciante->getDenuncias();
+
+		$location = new Location();
+
+		foreach ($denuncias as $key => $denuncia) {
+			$denuncia->location = $location->searchLocation($denuncia->location_id);
+		}
 		
 		if(empty($denuncias)){
 			return Response::json('Not found', 404);

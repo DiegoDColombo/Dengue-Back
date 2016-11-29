@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Denuncia;
+use DB;
 
 class Denuncia extends Model
 {
@@ -24,5 +25,13 @@ class Denuncia extends Model
 	public function searchDenuncia($id){
 		$denuncia = Denuncia::where('denuncia_id', $id)->first();
 		return $denuncia;
+	}
+
+	public function getAllDenuncias(){
+
+		$raw = "Select uf as label, count(uf) as value FROM location GROUP BY uf;";
+		$denuncias = DB::Select($raw);
+
+		return $denuncias;
 	}
 }

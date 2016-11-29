@@ -99,6 +99,11 @@ class DenunciaControllerAPI extends Controller
 
     }
 
+    public function getAllDenuncias(){
+        $denuncias = new Denuncia();
+        $denuncias = $denuncias->getAllDenuncias();
 
+        return Response::json($denuncias, 200);
+    }
 
 }

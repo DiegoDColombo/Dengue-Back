@@ -20,7 +20,8 @@ Route::get('/user', function (Request $request) {
 Route::group(['middleware' => 'auth'], function(){
 
 Route::post('/createDenuncia', 'api\DenunciaControllerAPI@createDenuncia');
-Route::get('/denuncias', 'api\DenuncianteControllerAPI@getDenuncias');
+Route::get('/getDenuncias', 'api\DenuncianteControllerAPI@getDenuncias');
+Route::get('/getAllDenuncias', 'api\DenunciaControllerAPI@getAllDenuncias');
 Route::put('/resolveDenuncia/{denunciaId}', 'api\DenunciaControllerAPI@updateDenunciaStatus');
 
 });
